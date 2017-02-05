@@ -1,5 +1,6 @@
 import { execute as commonExecute } from 'language-common';
 import jsforce from 'jsforce';
+import request from 'request';
 import { curry, mapValues, flatten } from 'lodash-fp';
 
 /** @module Adaptor */
@@ -15,76 +16,50 @@ import { curry, mapValues, flatten } from 'lodash-fp';
  * @param {State} state
  */
 
-/**
- * Outputs basic information about an sObject to `STDOUT`.
- * @constructor
- * @param {String} sObject - API name of the sObject.
- * @param {State} state - Runtime state.
- * @returns {Operation}
- */
-export const describe = curry(function(sObject, state) {
-  let {connection} = state;
+export const createSMS = curry(function(params, state) {
 
-  return connection.sobject(sObject).describe()
-  .then(function(meta) {
-    console.log('Label : ' + meta.label);
-    console.log('Num of Fields : ' + meta.fields.length);
+  function assembleError({ response, error }) {
+    if (response && ([200,201,202].indexOf(response.statusCode) > -1)) return false;
+    if (error) return error;
+    return new Error(`Server responded with ${response.statusCode}`)
+  }
 
-    return state;
-  })
-  .catch(function(err) {
-    console.error(err);
-    return err;
-  })
-
-});
-
-/**
- * Create a new object.
- * @function
- * @param {String} sObject - API name of the sObject.
- * @param {Object} attrs - Field attributes for the new object.
- * @param {State} state - Runtime state.
- * @returns {Operation}
- */
-export const create = curry(function(sObject, attrs, state) {
   let {connection, references} = state;
-  const finalAttrs = expandReferences(state, attrs)
-  console.info(`Creating ${sObject}`, finalAttrs);
+  const { loginUrl } = state.configuration;
 
-  return connection.create(sObject, finalAttrs)
-  .then(function(recordResult) {
-    console.log('Result : ' + JSON.stringify(recordResult));
-    return {
-      ...state, references: [recordResult, ...state.references]
-    }
+  const body = expandReferences(state, params)
+  body.type = "Inbound";
+
+  console.log("Creating new inbound message in Mogli:");
+  console.log("======================================");
+  console.log("  Sender phone number: " + body.sender);
+  console.log("  Message content: \"" + body.message + "\" \n");
+
+  console.log(connection.instanceUrl)
+
+  const url = connection.instanceUrl.concat('/services/apexrest/Mogli_SMS/v1/sms')
+  console.log(url + "\" \n");
+
+
+  return new Promise((resolve, reject) => {
+    request.post({
+      url: url,
+      'auth': {
+        'bearer': connection.accessToken
+      },
+      json: body
+    }, function(error, response, postResponseBody){
+      error = assembleError({error, response})
+      if (error) {
+        console.error("POST failed.")
+        // console.error(response);
+        reject(error);
+      } else {
+        console.log("POST succeeded.");
+        resolve(body);
+      }
+    })
   })
-
-});
-
-export const upsert = curry(function(sObject, externalId, attrs, state) {
-  let {connection, references} = state;
-  const finalAttrs = expandReferences(state, attrs)
-  console.info(
-    `Upserting ${sObject} with externalId`, externalId, ":" , finalAttrs
-  );
-
-  return connection.upsert(sObject, finalAttrs, externalId)
-  .then(function(recordResult) {
-    console.log('Result : ' + JSON.stringify(recordResult));
-    return {
-      ...state, references: [recordResult, ...state.references]
-    }
-  })
-
-})
-
-export const update = curry(function(sObject, attrs, state) {
-  let {connection, references} = state;
-  const finalAttrs = expandReferences(state, attrs)
-  console.info(`Updating ${sObject}`, finalAttrs);
-
-  return connection.update(sObject, finalAttrs)
   .then(function(recordResult) {
     console.log('Result : ' + JSON.stringify(recordResult));
     return {

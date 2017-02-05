@@ -1,7 +1,7 @@
 Language Mogli
 ==============
 
-Language Pack for building expressions and operations to make HTTP calls.
+Language Pack for building expressions and operations to interact with Mogli SMS.
 
 Documentation
 -------------
@@ -19,12 +19,23 @@ Documentation
 
 ### Create inbound SMS
 ```js
-create(sender, message)
+createSMS(
+  fields(
+    field("sender", dataValue("from_number")),
+    field("receivedAt", dataValue("timestamp")),
+    field("message", dataValue("message"))
+  )
+);
 ```
 
 ### Update SMS status
 ```js
-update(id, status)
+updateSMS(
+  fields(
+    field("Id", dataValue("externalId")),
+    field("status", dataValue("status"))
+  )
+);
 ```
 
 [Docs](docs/index)
