@@ -32,17 +32,64 @@ export const createSMS = curry(function(params, state) {
 
   console.log("Creating new inbound message in Mogli:");
   console.log("======================================");
+  console.log("  URL: " + url + "\" \n");
   console.log("  Sender phone number: " + body.sender);
   console.log("  Message content: \"" + body.message + "\" \n");
 
-  console.log(connection.instanceUrl)
-
   const url = connection.instanceUrl.concat('/services/apexrest/Mogli_SMS/v1/sms')
-  console.log(url + "\" \n");
-
 
   return new Promise((resolve, reject) => {
     request.post({
+      url: url,
+      'auth': {
+        'bearer': connection.accessToken
+      },
+      json: body
+    }, function(error, response, postResponseBody){
+      error = assembleError({error, response})
+      if (error) {
+        console.error("POST failed.")
+        // console.error(response);
+        reject(error);
+      } else {
+        console.log("POST succeeded.");
+        resolve(body);
+      }
+    })
+  })
+  .then(function(recordResult) {
+    console.log('Result : ' + JSON.stringify(recordResult));
+    return {
+      ...state, references: [recordResult, ...state.references]
+    }
+  })
+
+});
+
+export const updateSMS = curry(function(params, state) {
+
+  function assembleError({ response, error }) {
+    if (response && ([200,201,202].indexOf(response.statusCode) > -1)) return false;
+    if (error) return error;
+    return new Error(`Server responded with ${response.statusCode}`)
+  }
+
+  let {connection, references} = state;
+  const { loginUrl } = state.configuration;
+
+  const body = expandReferences(state, params)
+  // body.type = "Inbound";
+
+  console.log("Updating SMS message status in Mogli:");
+  console.log("=====================================");
+  console.log("  URL: " + url + "\" \n");
+  console.log("  Message Id: " + body.Id);
+  console.log("  Message Status: \"" + body.status + "\" \n");
+
+  const url = connection.instanceUrl.concat('/services/apexrest/Mogli_SMS/v1/sms')
+
+  return new Promise((resolve, reject) => {
+    request.put({
       url: url,
       'auth': {
         'bearer': connection.accessToken
