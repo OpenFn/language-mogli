@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { reference, create, upsert, steps, each,
-  field, fields, sourceValue } from '../src/Adaptor';
+import { reference, createSMS, steps, each,
+  field, fields, sourceValue, dataValue } from '../src/Adaptor';
 import { execute } from '../src/FakeAdaptor';
 import testData from './testData';
 
@@ -15,50 +15,30 @@ describe("Adaptor", () => {
     })
   })
 
-  describe("create", () => {
+  describe("createSMS", () => {
 
-    it("makes a new sObject", (done) => {
+    it("makes a new SMS in Mogli", (done) => {
 
       const fakeConnection = {
-        create: function() {
+        instanceUrl: "https://na8.salesforce.fake.com",
+        accessToken: "8675309",
+        createSMS: function() {
           return Promise.resolve({Id: 10})
         }
       };
-      let state = { connection: fakeConnection, references: [] };
+      let state = {
+        configuration: { loginUrl: "https://www.login.salesforce.com" },
+        connection: fakeConnection,
+        references: []
+      };
 
-      let sObject = "myObject";
       let fields = { field: "value" };
 
-      let spy = sinon.spy(fakeConnection, "create");
+      let spy = sinon.spy(fakeConnection, "createSMS");
 
-      create(sObject, fields, state).then((state) => {
-        expect(spy.args[0]).to.eql([ sObject, fields ]);
+      createSMS(fields, state).then((state) => {
+        expect(spy.args[0]).to.eql([ fields ]);
         expect(spy.called).to.eql(true);
-        expect(state.references[0]).to.eql({Id: 10})
-      }).then(done).catch(done)
-    })
-  })
-
-  describe("upsert", () => {
-
-    it("is expected to call `upsert` on the connection", (done) => {
-
-      const connection = {
-        upsert: function() {
-          return Promise.resolve({Id: 10})
-        }
-      };
-      let state = { connection, references: [] };
-
-      let sObject = "myObject";
-      let externalId = "MyExternalId";
-      let fields = { field: "value" };
-
-      let spy = sinon.spy(connection, "upsert");
-
-      upsert(sObject, externalId, fields, state).then((state) => {
-        expect(spy.args[0]).to.eql([ sObject, fields, externalId ])
-        expect(spy.called).to.eql(true)
         expect(state.references[0]).to.eql({Id: 10})
       }).then(done).catch(done)
     })
@@ -78,8 +58,8 @@ describe("Adaptor", () => {
 
     let counter = 0
     const fakeConnection = {
-      create: function(sObject, attrs) {
-        return Promise.resolve({sObject, fields: attrs, Id: counter+=1})
+      createSMS: function(sObject, attrs) {
+        return Promise.resolve({fields: attrs, Id: counter+=1})
       }
     };
 
@@ -93,13 +73,11 @@ describe("Adaptor", () => {
         steps(
           each(
             "$.data.store.book[*]",
-            create(
-              "Book",
+            createSMS(
               fields(
-                field(
-                  "title",
-                  sourceValue("$.data.title")
-                )
+                field("sender", dataValue("from_number")),
+                field("receivedAt", dataValue("timestamp")),
+                field("message", dataValue("message"))
               )
             )
           )

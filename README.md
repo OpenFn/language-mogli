@@ -1,19 +1,18 @@
-Language Mogli
+Language Mogli [![Build Status](https://travis-ci.org/OpenFn/language-mogli.svg?branch=master)](https://travis-ci.org/OpenFn/language-mogli)
 ==============
 
 Language Pack for building expressions and operations to interact with Mogli SMS.
 
 Documentation
 -------------
-## Fetch
 
 #### sample configuration
 ```js
 {
   "username": "taylor@openfn.org",
   "password": "supersecret",
-  "baseUrl": "https://instance_name.surveycto.com",
-  "authType": "digest"
+  "loginUrl": "https://instance_name.surveycto.com",
+  "securityToken": "xxx123"
 }
 ```
 
@@ -28,7 +27,8 @@ createSMS(
 );
 ```
 
-### Update SMS status
+<!-- TODO: determine update process -->
+<!-- ### Update SMS status
 ```js
 updateSMS(
   fields(
@@ -36,7 +36,7 @@ updateSMS(
     field("status", dataValue("status"))
   )
 );
-```
+``` -->
 
 [Docs](docs/index)
 
