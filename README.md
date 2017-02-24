@@ -49,7 +49,7 @@ Run tests using `npm run test` or `npm run test:watch`
 
 Build the project using `make`.
 
-### Old Mogli inbound SMS creation
+### Old Mogli inbound SMS creation used language-salesforce
 ```js
 create("Mogli_SMS__SMS__c", fields(
   field("Mogli_SMS__Direction__c", "Inbound"),
@@ -62,7 +62,7 @@ create("Mogli_SMS__SMS__c", fields(
 ));
 ```
 
-### Old Mogli outbound SMS status update
+### Old Mogli outbound SMS status update used language-salesforce
 ```js
 update("Mogli_SMS__SMS__c", fields(
   field("Id", dataValue("externalId")),
