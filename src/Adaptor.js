@@ -25,7 +25,7 @@ export const createSMS = curry(function(params, state) {
   }
 
   let {connection, references} = state;
-  const { loginUrl } = state.configuration;
+  const { loginUrl, secret } = state.configuration;
 
   const body = expandReferences(state, params)
   body.type = "Inbound";
@@ -38,11 +38,17 @@ export const createSMS = curry(function(params, state) {
 
   const url = connection.instanceUrl.concat('/services/apexrest/Mogli_SMS/v1/sms')
 
+  console.log(secret)
+
   return new Promise((resolve, reject) => {
     request.post({
       url: url,
       'auth': {
         'bearer': connection.accessToken
+      },
+      headers: {
+        // TODO: finish
+        'X-Api-Key': secret
       },
       json: body
     }, function(error, response, postResponseBody){

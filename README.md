@@ -12,7 +12,8 @@ Documentation
   "username": "taylor@openfn.org",
   "password": "supersecret",
   "loginUrl": "https://instance_name.surveycto.com",
-  "securityToken": "xxx123"
+  "securityToken": "xxx123",
+  "secret": "abc456"
 }
 ```
 
