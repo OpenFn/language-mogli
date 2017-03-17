@@ -38,8 +38,6 @@ export const createSMS = curry(function(params, state) {
 
   const url = connection.instanceUrl.concat('/services/apexrest/Mogli_SMS/v1/sms')
 
-  console.log(secret)
-
   return new Promise((resolve, reject) => {
     request.post({
       url: url,
@@ -48,7 +46,7 @@ export const createSMS = curry(function(params, state) {
       },
       headers: {
         // TODO: finish
-        'X-Api-Key': secret
+        'x-api-key': secret
       },
       json: body
     }, function(error, response, postResponseBody){
