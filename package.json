@@ -1,6 +1,6 @@
 {
   "name": "language-mogli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A Mogli SMS Language Pack for OpenFn",
   "main": "lib/index.js",
   "scripts": {
@@ -14,20 +14,25 @@
     "lib/"
   ],
   "dependencies": {
+    "JSONPath": "^0.10.0",
+    "jsforce": "1.5.1",
     "language-common": "github:openfn/language-common#v0.0.5",
-    "request": "^2.79.0"
+    "lodash-fp": "^0.10.2",
+    "mustache": "^2.2.0",
+    "yargs": "^3.30.0"
   },
   "devDependencies": {
     "assertion-error": "^1.0.1",
     "babel": "^6.0.15",
     "babel-cli": "^6.1.2",
     "babel-core": "^6.1.2",
+    "babel-plugin-transform-flow-strip-types": "^6.0.14",
     "babel-preset-es2015": "^6.1.2",
     "babel-preset-stage-0": "^6.3.13",
     "chai": "^3.4.0",
     "deep-eql": "^0.1.3",
     "mocha": "^2.3.3",
-    "nock": "^8.0.0",
-    "sinon": "^1.17.2"
+    "sinon": "^1.17.2",
+    "type-detect": "^1.0.0"
   }
 }
