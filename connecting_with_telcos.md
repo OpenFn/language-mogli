@@ -1,6 +1,7 @@
-# Basic requirements for a telco to connect with Mogli
+# Connecting with telcos
+This document outlines the basic requests that should be made of telco providers when we approach them to integrate with their systems. We we _can_ connect in other ways, a basic, JSON-based REST API is the web standard and it is what we look for.
 
-# Sending SMS from Mogli to local recipients
+## Sending SMS from Mogli to local recipients
 In order to send SMS messages, we will make an HTTP post to a URL that you specify with basic authentication and a content type of application/json. It will contain the recipient address and text as key:value pairs. Using CURL for testing purposes, the post will look like this: 
  
 ```sh
