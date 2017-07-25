@@ -16,5 +16,7 @@ curl -X POST \
 For additional clarity here, see Orange's API documentation in Niger: https://developer.orange.com/apis/sms-ne/api-reference
  
 ## Receiving SMS from local recipients
-We will expect that Orange will make a similar HTTP post to our url (https://www.openfn.org/inbox/ something-lutheran) with the content of the message and the sender whenever an SMS is received.
+
+We will expect that Orange will make a similar HTTP post to our url (https://www.openfn.org/inbox/something-secret) with the content of the message and the sender whenever an SMS is received.
+
 Note that these posts are delivered over HTTPS and use modern standard authentication ("Basic Auth") but that there is no VPN connection required.
