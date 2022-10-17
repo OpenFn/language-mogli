@@ -7,11 +7,12 @@ Documentation
 -------------
 
 #### sample configuration
-```js
+
+```json
 {
   "username": "taylor@openfn.org",
   "password": "supersecret",
-  "loginUrl": "https://instance_name.surveycto.com",
+  "loginUrl": "https://instance_name.mogli.com",
   "securityToken": "xxx123",
   "secret": "abc456"
 }
