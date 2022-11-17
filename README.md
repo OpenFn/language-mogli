@@ -1,4 +1,9 @@
-Language Mogli [![Build Status](https://travis-ci.org/OpenFn/language-mogli.svg?branch=master)](https://travis-ci.org/OpenFn/language-mogli)
+# _⚠️ MOVED TO [OpenFn/adaptors](https://github.com/OpenFn/adaptors)! ⚠️_
+
+**N.B.: New versions are available at:
+https://github.com/OpenFn/adaptors/tree/main/packages/mogli**
+
+# Language Mogli (Archived)
 ==============
 
 Language Pack for building expressions and operations to interact with Mogli SMS.
